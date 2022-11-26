@@ -1,47 +1,49 @@
-create table if not exists musicians (
-	id serial primary key,
-	musician text,
-	nickname text 
-);
-create table if not exists albums (
-	id serial  primary key,
-	name_album text,
-	year_of_release_album integer
+CREATE TABLE IF NOT EXISTS Genre (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(30) NOT NULL
 );
 
-create table if not exists tracks (
-	id serial primary key,
-	name_track text,
-	duration numeric,
-	album_id  integer references albums(id)
+CREATE TABLE IF NOT EXISTS Bands (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(40) NOT NULL
 );
 
-create table if not exists genres (
-	id serial primary key,
-	name_genre text
+CREATE TABLE IF NOT EXISTS GenreBand (
+	Genre_id INTEGER REFERENCES Genre(id),
+	Band_id INTEGER REFERENCES Bands(id),
+	CONSTRAINT pk_GenreBand PRIMARY KEY (Genre_id, Band_id)
 );
 
-create table if not exists digests (
-	id serial primary key,
-	name_digest text,
-	year_of_release_digest integer
+
+CREATE TABLE IF NOT EXISTS Album (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(40) unique NOT NULL,
+	year_of INTEGER check(year_of>1900)
 );
 
-create table if not exists genre_musician (
-	id serial primary key,
-	genres_id  integer references genres(id),
-	musician_id  integer references musicians(id)
+
+CREATE TABLE IF NOT EXISTS BandAlbum (
+	Album_id INTEGER REFERENCES Album(id),
+	Band_id INTEGER REFERENCES Bands(id),
+	CONSTRAINT pk_BandAlbum PRIMARY KEY (Album_id, Band_id)
 );
 
-create table if not exists musicians_albums (
-	id serial primary key,
-	musician_id  integer references musicians(id),
-	album_id  integer references albums(id)
-	
+
+CREATE TABLE IF NOT EXISTS Songs (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(50) NOT NULL,
+	duration INTEGER,
+	Album_id INTEGER REFERENCES Album(id)
 );
 
-create table if not exists composition_digest (
-	id serial primary key,
-	digest_id  integer references digests(id),
-	track_id  integer references tracks(id)
+CREATE TABLE IF NOT EXISTS Collection (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(40) unique NOT NULL,
+	year_of INTEGER check(year_of>1900),
+);
 
+CREATE TABLE IF NOT EXISTS SongCollection (
+	Song_id INTEGER REFERENCES Songs(id),
+	Collection_id INTEGER REFERENCES Collection(id),
+	CONSTRAINT pk_SongCollection PRIMARY KEY (Song_id, Collection_id)
+);
