@@ -1,54 +1,47 @@
-CREATE TABLE IF NOT EXISTS Genres(
-	id SERIAL PRIMARY KEY,
-	name_genre VARCHAR(50) NOT NULL
+create table if not exists musicians (
+	id serial primary key,
+	musician text,
+	nickname text 
+);
+create table if not exists albums (
+	id serial  primary key,
+	name_album text,
+	year_of_release_album integer
 );
 
-
-CREATE TABLE IF NOT EXISTS Singers(
-	id SERIAL PRIMARY KEY,
-	name_singer VARCHAR(100) NOT NULL
+create table if not exists tracks (
+	id serial primary key,
+	name_track text,
+	duration numeric,
+	album_id  integer references albums(id)
 );
 
-
-CREATE TABLE IF NOT EXISTS Albums(
-	id SERIAL PRIMARY KEY,
-	name_album VARCHAR(100) NOT NULL,
-	year_creation INTEGER NOT NULL
+create table if not exists genres (
+	id serial primary key,
+	name_genre text
 );
 
-
-CREATE TABLE IF NOT EXISTS Compilations(
-	id SERIAL PRIMARY KEY,
-	year_compilation INTEGER NOT NULL,
-	name_compilation VARCHAR(100) NOT NULL
+create table if not exists digests (
+	id serial primary key,
+	name_digest text,
+	year_of_release_digest integer
 );
 
-
-CREATE TABLE IF NOT EXISTS Tracks(
-	id SERIAL PRIMARY KEY,
-	name_track VARCHAR(100) NOT NULL,
-	duration TIME NOT NULL,
-	album_id INTEGER NOT NULL REFERENCES Albums(id)
+create table if not exists genre_musician (
+	id serial primary key,
+	genres_id  integer references genres(id),
+	musician_id  integer references musicians(id)
 );
 
-
-CREATE TABLE IF NOT EXISTS TrackCompilation(
-	track_id INTEGER REFERENCES Tracks(id),
-	compilation_id INTEGER REFERENCES Compilations(id),
-	CONSTRAINT pk_track_compilation PRIMARY KEY (track_id, compilation_id)
+create table if not exists musicians_albums (
+	id serial primary key,
+	musician_id  integer references musicians(id),
+	album_id  integer references albums(id)
+	
 );
 
-
-CREATE TABLE IF NOT EXISTS SingerAlbum(
-	singer_id INTEGER REFERENCES Singers(id),
-	album_id INTEGER REFERENCES Albums(id),
-	CONSTRAINT pk_singer_album PRIMARY KEY (singer_id, album_id)
-);
-
-
-CREATE TABLE IF NOT EXISTS SingerGenre(
-	singer_id INTEGER REFERENCES Singers(id),
-	genre_id INTEGER REFERENCES Genres(id),
-	CONSTRAINT pk_singer_genre PRIMARY KEY (singer_id, genre_id)
-);
+create table if not exists composition_digest (
+	id serial primary key,
+	digest_id  integer references digests(id),
+	track_id  integer references tracks(id)
 
